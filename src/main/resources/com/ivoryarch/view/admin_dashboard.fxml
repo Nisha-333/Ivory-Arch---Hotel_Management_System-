@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.chart.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.ivoryarch.controller.AdminDashboardController"
+            styleClass="main-pane">
+    <top>
+        <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="16">
+            <Label text="IVORY ARCH" styleClass="top-brand"/>
+            <Label text="|" styleClass="top-sep"/>
+            <Label text="Admin Panel" styleClass="top-section"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="welcomeLabel" styleClass="top-user"/>
+            <Button text="Sign Out" onAction="#handleLogout" styleClass="btn-outline"/>
+        </HBox>
+    </top>
+    <center>
+        <TabPane fx:id="mainTabPane" styleClass="ia-tabs" tabClosingPolicy="UNAVAILABLE">
+
+            <!-- ROOMS TAB -->
+            <Tab text="Rooms">
+                <BorderPane>
+                    <top>
+                        <HBox spacing="8" styleClass="toolbar">
+                            <TextField fx:id="roomNumberField" promptText="Room No." prefWidth="80" styleClass="ia-field"/>
+                            <ComboBox fx:id="roomTypeCombo" prefWidth="140" promptText="Type" styleClass="ia-field"/>
+                            <TextField fx:id="roomPriceField" promptText="Price/Night" prefWidth="100" styleClass="ia-field"/>
+                            <TextField fx:id="roomCapacityField" promptText="Capacity" prefWidth="80" styleClass="ia-field"/>
+                            <TextField fx:id="roomFloorField" promptText="Floor" prefWidth="60" styleClass="ia-field"/>
+                            <CheckBox fx:id="wifiCheck" text="WiFi"/>
+                            <CheckBox fx:id="breakfastCheck" text="Breakfast"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button text="Add" onAction="#handleAddRoom" styleClass="btn-primary"/>
+                            <Button text="Update" onAction="#handleUpdateRoom" styleClass="btn-secondary"/>
+                            <Button text="Delete" onAction="#handleDeleteRoom" styleClass="btn-danger"/>
+                            <Button text="Refresh" onAction="#handleRefreshRooms" styleClass="btn-outline"/>
+                        </HBox>
+                    </top>
+                    <center>
+                        <TableView fx:id="roomsTable" styleClass="ia-table">
+                            <columns>
+                                <TableColumn fx:id="colRoomNo" text="Room" prefWidth="70"/>
+                                <TableColumn fx:id="colRoomType" text="Type" prefWidth="130"/>
+                                <TableColumn fx:id="colRoomPrice" text="Price / Night" prefWidth="110"/>
+                                <TableColumn fx:id="colCapacity" text="Guests" prefWidth="70"/>
+                                <TableColumn fx:id="colFloor" text="Floor" prefWidth="60"/>
+                                <TableColumn fx:id="colRoomStatus" text="Status" prefWidth="120"/>
+                                <TableColumn fx:id="colWifi" text="WiFi" prefWidth="55"/>
+                                <TableColumn fx:id="colBreakfast" text="Breakfast" prefWidth="80"/>
+                            </columns>
+                        </TableView>
+                    </center>
+                </BorderPane>
+            </Tab>
+
+            <!-- BOOKINGS TAB -->
+            <Tab text="Bookings">
+                <BorderPane>
+                    <top>
+                        <HBox spacing="8" styleClass="toolbar">
+                            <Button text="Checkout" onAction="#handleCheckout" styleClass="btn-primary"/>
+                            <Button text="Cancel Booking" onAction="#handleCancelBooking" styleClass="btn-danger"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button text="Refresh" onAction="#handleRefreshBookings" styleClass="btn-outline"/>
+                        </HBox>
+                    </top>
+                    <center>
+                        <TableView fx:id="bookingsTable" styleClass="ia-table">
+                            <columns>
+                                <TableColumn fx:id="colBkgId" text="ID" prefWidth="50"/>
+                                <TableColumn fx:id="colBkgCustomer" text="Guest" prefWidth="150"/>
+                                <TableColumn fx:id="colBkgRoom" text="Room" prefWidth="70"/>
+                                <TableColumn fx:id="colBkgCheckIn" text="Check-In" prefWidth="110"/>
+                                <TableColumn fx:id="colBkgCheckOut" text="Check-Out" prefWidth="110"/>
+                                <TableColumn fx:id="colBkgDays" text="Nights" prefWidth="60"/>
+                                <TableColumn fx:id="colBkgStatus" text="Status" prefWidth="110"/>
+                                <TableColumn fx:id="colBkgAmount" text="Est. Amount*" prefWidth="120"/>
+                            </columns>
+                        </TableView>
+                    </center>
+                    <bottom>
+                        <Label text="  * Est. Amount = room charge + 18% GST only. Final bill may differ if extras (food, laundry) are added."
+                               styleClass="hint-label" style="-fx-padding:5 12;"/>
+                    </bottom>
+                </BorderPane>
+            </Tab>
+
+            <!-- BILLING TAB -->
+            <Tab text="Billing">
+                <BorderPane>
+                    <top>
+                        <VBox styleClass="toolbar" spacing="8">
+                            <Label text="Generate a bill for a checked-out booking. Add extras before generating. GST (18%) is applied on the total." styleClass="hint-label"/>
+                            <GridPane hgap="10" vgap="8">
+                                <Label text="Booking ID:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <TextField fx:id="billBookingIdField" prefWidth="90" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="ia-field"/>
+                                <Label text="Food (Rs.):" GridPane.rowIndex="0" GridPane.columnIndex="2" styleClass="field-label"/>
+                                <TextField fx:id="billFoodField" prefWidth="90" GridPane.rowIndex="0" GridPane.columnIndex="3" promptText="0" styleClass="ia-field"/>
+                                <Label text="Laundry (Rs.):" GridPane.rowIndex="0" GridPane.columnIndex="4" styleClass="field-label"/>
+                                <TextField fx:id="billLaundryField" prefWidth="90" GridPane.rowIndex="0" GridPane.columnIndex="5" promptText="0" styleClass="ia-field"/>
+                                <Label text="Coupon:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="field-label"/>
+                                <TextField fx:id="billCouponField" prefWidth="110" GridPane.rowIndex="1" GridPane.columnIndex="1" promptText="SAVE10 / ARCH20" styleClass="ia-field"/>
+                                <CheckBox fx:id="lateCheckoutCheck" text="Late Checkout (+Rs.500)" GridPane.rowIndex="1" GridPane.columnIndex="2" GridPane.columnSpan="2"/>
+                                <Label text="Payment:" GridPane.rowIndex="1" GridPane.columnIndex="4" styleClass="field-label"/>
+                                <ComboBox fx:id="paymentModeCombo" GridPane.rowIndex="1" GridPane.columnIndex="5" prefWidth="100" styleClass="ia-field"/>
+                                <HBox spacing="8" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="6">
+                                    <Button text="Generate Bill" onAction="#handleGenerateBill" styleClass="btn-primary"/>
+                                    <Button text="Mark Paid" onAction="#handleMarkPaid" styleClass="btn-success"/>
+                                    <Button text="Export Invoice" onAction="#handleExportInvoice" styleClass="btn-outline"/>
+                                </HBox>
+                            </GridPane>
+                        </VBox>
+                    </top>
+                    <center>
+                        <TableView fx:id="billsTable" styleClass="ia-table">
+                            <columns>
+                                <TableColumn fx:id="colBillId" text="Bill" prefWidth="55"/>
+                                <TableColumn fx:id="colBillCustomer" text="Guest" prefWidth="130"/>
+                                <TableColumn fx:id="colBillRoom" text="Room" prefWidth="60"/>
+                                <TableColumn fx:id="colBillDays" text="Nights" prefWidth="55"/>
+                                <TableColumn fx:id="colBillRoom2" text="Room Rs." prefWidth="90"/>
+                                <TableColumn fx:id="colBillGst" text="GST Rs." prefWidth="80"/>
+                                <TableColumn fx:id="colBillDisc" text="Discount Rs." prefWidth="100"/>
+                                <TableColumn fx:id="colBillTotal" text="Total Rs." prefWidth="90"/>
+                                <TableColumn fx:id="colBillStatus" text="Status" prefWidth="90"/>
+                                <TableColumn fx:id="colBillMode" text="Mode" prefWidth="80"/>
+                            </columns>
+                        </TableView>
+                    </center>
+                </BorderPane>
+            </Tab>
+
+            <!-- ANALYTICS TAB -->
+            <Tab text="Analytics">
+                <BorderPane>
+                    <top>
+                        <HBox spacing="16" styleClass="toolbar" alignment="CENTER_LEFT">
+                            <Label fx:id="totalRoomsLabel" styleClass="stat-pill"/>
+                            <Label fx:id="occupiedLabel" styleClass="stat-pill"/>
+                            <Label fx:id="revenueLabel" styleClass="stat-pill"/>
+                            <Label fx:id="checkinsLabel" styleClass="stat-pill"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button text="Refresh" onAction="#handleRefreshAnalytics" styleClass="btn-outline"/>
+                        </HBox>
+                    </top>
+                    <center>
+                        <HBox spacing="12" style="-fx-padding:12;">
+                            <PieChart fx:id="roomStatusPie" title="Room Status" prefWidth="340" prefHeight="320"/>
+                            <BarChart fx:id="roomTypeBar" title="Rooms by Type" prefWidth="340" prefHeight="320">
+                                <xAxis><CategoryAxis/></xAxis><yAxis><NumberAxis/></yAxis>
+                            </BarChart>
+                            <LineChart fx:id="revenueLineChart" title="Revenue (Paid Bills)" prefWidth="340" prefHeight="320">
+                                <xAxis><CategoryAxis label="Month"/></xAxis>
+                                <yAxis><NumberAxis label="Rs."/></yAxis>
+                            </LineChart>
+                        </HBox>
+                    </center>
+                </BorderPane>
+            </Tab>
+
+            <!-- HOUSEKEEPING TAB -->
+            <Tab text="Housekeeping">
+                <BorderPane>
+                    <top>
+                        <HBox spacing="8" styleClass="toolbar" alignment="CENTER_LEFT">
+                            <Label text="Select a room below, then use the buttons to update its status." styleClass="hint-label"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button text="Mark Cleaned" onAction="#handleMarkCleaned" styleClass="btn-success"/>
+                            <Button text="Set Maintenance" onAction="#handleSetMaintenance" styleClass="btn-secondary"/>
+                            <Button text="Refresh" onAction="#handleRefreshHousekeeping" styleClass="btn-outline"/>
+                        </HBox>
+                    </top>
+                    <center>
+                        <TableView fx:id="housekeepingTable" styleClass="ia-table">
+                            <columns>
+                                <TableColumn fx:id="colHkRoom" text="Room No." prefWidth="100"/>
+                                <TableColumn fx:id="colHkType" text="Type" prefWidth="140"/>
+                                <TableColumn fx:id="colHkStatus" text="Status" prefWidth="160"/>
+                                <TableColumn fx:id="colHkAssigned" text="Assigned To" prefWidth="180"/>
+                            </columns>
+                        </TableView>
+                    </center>
+                </BorderPane>
+            </Tab>
+
+            <!-- GUESTS TAB -->
+            <Tab text="Guests">
+                <BorderPane>
+                    <top>
+                        <HBox spacing="8" styleClass="toolbar">
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button text="Refresh" onAction="#handleRefreshCustomers" styleClass="btn-outline"/>
+                        </HBox>
+                    </top>
+                    <center>
+                        <TableView fx:id="customersTable" styleClass="ia-table">
+                            <columns>
+                                <TableColumn fx:id="colCustId" text="ID" prefWidth="60"/>
+                                <TableColumn fx:id="colCustName" text="Name" prefWidth="180"/>
+                                <TableColumn fx:id="colCustEmail" text="Email" prefWidth="220"/>
+                                <TableColumn fx:id="colCustPhone" text="Phone" prefWidth="140"/>
+                            </columns>
+                        </TableView>
+                    </center>
+                </BorderPane>
+            </Tab>
+
+            <!-- SYSTEM TAB -->
+            <Tab text="System">
+                <BorderPane>
+                    <top>
+                        <VBox spacing="10" styleClass="toolbar">
+                            <Label text="System Utilities" styleClass="section-title"/>
+                            <HBox spacing="10">
+                                <Button text="Backup Rooms to File" onAction="#handleSerializeRooms" styleClass="btn-primary" prefWidth="200"/>
+                                <Button text="Restore Rooms from Backup" onAction="#handleDeserializeRooms" styleClass="btn-secondary" prefWidth="220"/>
+                                <Button text="View Activity Log" onAction="#handleViewLog" styleClass="btn-outline" prefWidth="180"/>
+                            </HBox>
+                            <HBox spacing="10">
+                                <Button text="Generics Demo" onAction="#handleGenericsDemo" styleClass="btn-outline" prefWidth="200"/>
+                                <Button text="Deadlock Demo" onAction="#handleDeadlockDemo" styleClass="btn-danger" prefWidth="200"/>
+                            </HBox>
+                            <Label text="Output appears below. Activity log is saved to data/activity.log. Room backup saved to data/backups.dat" styleClass="hint-label"/>
+                        </VBox>
+                    </top>
+                    <center>
+                        <TextArea fx:id="logArea" editable="false" wrapText="true" styleClass="log-area"/>
+                    </center>
+                </BorderPane>
+            </Tab>
+
+        </TabPane>
+    </center>
+</BorderPane>

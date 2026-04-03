@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.ivoryarch.controller.CustomerDashboardController"
+            styleClass="main-pane">
+    <top>
+        <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="16">
+            <Label text="IVORY ARCH" styleClass="top-brand"/>
+            <Label text="|" styleClass="top-sep"/>
+            <Label text="Guest Portal" styleClass="top-section"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="welcomeLabel" styleClass="top-user"/>
+            <Button text="Sign Out" onAction="#handleLogout" styleClass="btn-outline"/>
+        </HBox>
+    </top>
+    <center>
+        <TabPane styleClass="ia-tabs" tabClosingPolicy="UNAVAILABLE">
+
+            <!-- BROWSE ROOMS -->
+            <Tab text="Browse Rooms">
+                <BorderPane>
+                    <top>
+                        <HBox spacing="8" styleClass="toolbar" alignment="CENTER_LEFT">
+                            <Label text="Filter:" styleClass="field-label"/>
+                            <ComboBox fx:id="filterTypeCombo" promptText="All Types" prefWidth="160" styleClass="ia-field"/>
+                            <Button text="Filter" onAction="#handleFilterRooms" styleClass="btn-secondary"/>
+                            <Button text="Show All" onAction="#handleShowAllRooms" styleClass="btn-outline"/>
+                            <Button text="Available Only" onAction="#handleShowAvailableOnly" styleClass="btn-success"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button text="Refresh" onAction="#handleRefreshAvailableRooms" styleClass="btn-outline"/>
+                        </HBox>
+                    </top>
+                    <center>
+                        <TableView fx:id="availableRoomsTable" styleClass="ia-table">
+                            <columns>
+                                <TableColumn fx:id="colAvailRoomNo" text="Room" prefWidth="70"/>
+                                <TableColumn fx:id="colAvailType" text="Type" prefWidth="140"/>
+                                <TableColumn fx:id="colAvailPrice" text="Price / Night" prefWidth="110"/>
+                                <TableColumn fx:id="colAvailCap" text="Guests" prefWidth="70"/>
+                                <TableColumn fx:id="colAvailFloor" text="Floor" prefWidth="60"/>
+                                <TableColumn fx:id="colAvailWifi" text="WiFi" prefWidth="60"/>
+                                <TableColumn fx:id="colAvailBreakfast" text="Breakfast" prefWidth="80"/>
+                                <TableColumn fx:id="colAvailStatus" text="Status" prefWidth="110"/>
+                            </columns>
+                        </TableView>
+                    </center>
+                    <bottom>
+                        <Label text="  Tip: Click 'Available Only' to see rooms you can book. Use the Recommend tab to find rooms within your budget."
+                               styleClass="hint-label" style="-fx-padding:5 12;"/>
+                    </bottom>
+                </BorderPane>
+            </Tab>
+
+            <!-- BOOK ROOM -->
+            <Tab text="Book a Room">
+                <ScrollPane fitToWidth="true" styleClass="scroll-pane">
+                    <VBox spacing="18" style="-fx-padding:28 32;" maxWidth="500">
+                        <Label text="Reserve a Room" styleClass="section-title"/>
+                        <Label text="Enter the room number from the Browse Rooms tab. Only Available rooms can be booked." styleClass="hint-label"/>
+                        <GridPane hgap="14" vgap="12">
+                            <columnConstraints>
+                                <ColumnConstraints minWidth="130"/>
+                                <ColumnConstraints prefWidth="260"/>
+                            </columnConstraints>
+                            <Label text="Room Number:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="field-label"/>
+                            <TextField fx:id="bookRoomNoField" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="ia-field" promptText="e.g. 101"/>
+                            <Label text="Check-In:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="field-label"/>
+                            <DatePicker fx:id="checkInPicker" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="260"/>
+                            <Label text="Check-Out:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="field-label"/>
+                            <DatePicker fx:id="checkOutPicker" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="260"/>
+                            <Label text="Number of Guests:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="field-label"/>
+                            <TextField fx:id="guestsField" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="ia-field" promptText="1"/>
+                            <Label text="Special Requests:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="field-label"/>
+                            <TextField fx:id="specialReqField" GridPane.rowIndex="4" GridPane.columnIndex="1" styleClass="ia-field" promptText="Optional"/>
+                        </GridPane>
+                        <Separator/>
+                        <Button text="Confirm Reservation" onAction="#handleBookRoom" styleClass="btn-primary" prefWidth="240"/>
+                        <Label fx:id="bookingStatusLabel" styleClass="status-label" wrapText="true" maxWidth="420"/>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+
+            <!-- MY BOOKINGS -->
+            <Tab text="My Bookings">
+                <BorderPane>
+                    <top>
+                        <HBox spacing="8" styleClass="toolbar">
+                            <Label text="Note: The amount shown is an estimate (room + GST). The final bill may include extras added by admin." styleClass="hint-label"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button text="Cancel Booking" onAction="#handleCancelMyBooking" styleClass="btn-danger"/>
+                            <Button text="Refresh" onAction="#handleRefreshMyBookings" styleClass="btn-outline"/>
+                        </HBox>
+                    </top>
+                    <center>
+                        <TableView fx:id="myBookingsTable" styleClass="ia-table">
+                            <columns>
+                                <TableColumn fx:id="colMyBkgId" text="ID" prefWidth="50"/>
+                                <TableColumn fx:id="colMyBkgRoom" text="Room" prefWidth="70"/>
+                                <TableColumn fx:id="colMyBkgCheckIn" text="Check-In" prefWidth="110"/>
+                                <TableColumn fx:id="colMyBkgCheckOut" text="Check-Out" prefWidth="110"/>
+                                <TableColumn fx:id="colMyBkgDays" text="Nights" prefWidth="65"/>
+                                <TableColumn fx:id="colMyBkgStatus" text="Status" prefWidth="120"/>
+                                <TableColumn fx:id="colMyBkgAmount" text="Est. Amount (Rs.)" prefWidth="140"/>
+                            </columns>
+                        </TableView>
+                    </center>
+                </BorderPane>
+            </Tab>
+
+            <!-- MY BILLS -->
+            <Tab text="My Bills">
+                <BorderPane>
+                    <top>
+                        <HBox spacing="8" styleClass="toolbar" alignment="CENTER_LEFT">
+                            <Label text="Payment Mode:" styleClass="field-label"/>
+                            <ComboBox fx:id="custPaymentModeCombo" prefWidth="110" styleClass="ia-field"/>
+                            <Button text="Pay Selected Bill" onAction="#handlePayBill" styleClass="btn-success"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button text="Refresh" onAction="#handleRefreshBills" styleClass="btn-outline"/>
+                        </HBox>
+                    </top>
+                    <center>
+                        <SplitPane orientation="VERTICAL" dividerPositions="0.50">
+                            <TableView fx:id="myBillsTable" styleClass="ia-table">
+                                <columns>
+                                    <TableColumn fx:id="colMyBillId" text="Bill ID" prefWidth="70"/>
+                                    <TableColumn fx:id="colMyBillRoom" text="Room" prefWidth="70"/>
+                                    <TableColumn fx:id="colMyBillDays" text="Nights" prefWidth="65"/>
+                                    <TableColumn fx:id="colMyBillRoomCharge" text="Room Charge" prefWidth="110"/>
+                                    <TableColumn fx:id="colMyBillGst" text="GST (18%)" prefWidth="100"/>
+                                    <TableColumn fx:id="colMyBillDiscount" text="Discount" prefWidth="90"/>
+                                    <TableColumn fx:id="colMyBillTotal" text="Total (Rs.)" prefWidth="110"/>
+                                    <TableColumn fx:id="colMyBillStatus" text="Status" prefWidth="100"/>
+                                    <TableColumn fx:id="colMyBillMode" text="Paid Via" prefWidth="90"/>
+                                </columns>
+                            </TableView>
+                            <VBox styleClass="bill-breakdown-pane" spacing="0">
+                                <Label text="Bill Breakdown  —  click any bill above to see details" styleClass="breakdown-title" style="-fx-padding:8 16 4 16;"/>
+                                <TextArea fx:id="billBreakdownArea" editable="false" wrapText="true"
+                                          styleClass="breakdown-area" VBox.vgrow="ALWAYS"/>
+                            </VBox>
+                        </SplitPane>
+                    </center>
+                </BorderPane>
+            </Tab>
+
+            <!-- RECOMMEND -->
+            <Tab text="Recommend">
+                <ScrollPane fitToWidth="true" styleClass="scroll-pane">
+                    <VBox spacing="16" style="-fx-padding:28 32;" maxWidth="520">
+                        <Label text="Room Recommendation" styleClass="section-title"/>
+                        <Label text="Enter your budget and preferences. We'll find all available rooms that fit." styleClass="hint-label"/>
+                        <GridPane hgap="14" vgap="12">
+                            <columnConstraints>
+                                <ColumnConstraints minWidth="150"/>
+                                <ColumnConstraints prefWidth="240"/>
+                            </columnConstraints>
+                            <Label text="Total Budget (Rs.):" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="field-label"/>
+                            <TextField fx:id="recBudgetField" promptText="e.g. 10000" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="ia-field"/>
+                            <Label text="Number of Guests:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="field-label"/>
+                            <TextField fx:id="recGuestsField" promptText="e.g. 2" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="ia-field"/>
+                            <Label text="Number of Nights:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="field-label"/>
+                            <TextField fx:id="recNightsField" promptText="e.g. 3" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="ia-field"/>
+                            <CheckBox fx:id="recWifiCheck" text="Need WiFi" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                            <CheckBox fx:id="recBreakfastCheck" text="Need Breakfast" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                        </GridPane>
+                        <Button text="Find Rooms" onAction="#handleGetRecommendations" styleClass="btn-primary" prefWidth="180"/>
+                        <TextArea fx:id="recommendationArea" prefHeight="260" editable="false"
+                                  wrapText="true" styleClass="breakdown-area"/>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+
+        </TabPane>
+    </center>
+</BorderPane>

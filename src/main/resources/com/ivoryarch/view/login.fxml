@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.ivoryarch.controller.LoginController"
+           styleClass="login-root">
+
+    <BorderPane maxWidth="400" maxHeight="440" styleClass="login-card">
+        <top>
+            <VBox alignment="CENTER" spacing="6" style="-fx-padding:36 20 16 20;">
+                <Label text="IVORY ARCH" styleClass="hotel-title"/>
+                <Label text="Hotel Management" styleClass="hotel-subtitle"/>
+                <Separator style="-fx-padding:4 0 0 0;"/>
+            </VBox>
+        </top>
+        <center>
+            <GridPane hgap="10" vgap="14" style="-fx-padding:10 32 10 32;">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="80"/>
+                    <ColumnConstraints prefWidth="220"/>
+                </columnConstraints>
+                <Label text="Email" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="field-label"/>
+                <TextField fx:id="emailField" promptText="your@email.com"
+                           GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="ia-field"/>
+                <Label text="Password" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="field-label"/>
+                <PasswordField fx:id="passwordField" promptText="Password"
+                              GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="ia-field"/>
+                <Label text="Login As" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="field-label"/>
+                <ComboBox fx:id="roleCombo" GridPane.rowIndex="2" GridPane.columnIndex="1"
+                          prefWidth="220" styleClass="ia-field"/>
+            </GridPane>
+        </center>
+        <bottom>
+            <VBox alignment="CENTER" spacing="10" style="-fx-padding:6 32 28 32;">
+                <Button fx:id="loginBtn" text="Sign In" onAction="#handleLogin"
+                        styleClass="btn-primary" maxWidth="Infinity"/>
+                <Button text="New here? Register as Guest" onAction="#handleRegister" styleClass="btn-link"/>
+                <Label fx:id="statusLabel" styleClass="status-label" wrapText="true" maxWidth="300"/>
+            </VBox>
+        </bottom>
+    </BorderPane>
+</StackPane>
